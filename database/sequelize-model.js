@@ -6,7 +6,7 @@ pg.defaults.ssl = {
   rejectUnauthorized: true
 };
 
-const sequelize = new Sequelize('mysql://8vddmvcl7mfgehm1hr90:pscale_pw_TJW3lq8HYigMSMbRBJkHeiJH6fFNnUCI3RwIeigSt2J@aws.connect.psdb.cloud/animalia', {
+const sequelize = new Sequelize('mysql://dw9ekho67powef39vf3x:pscale_pw_WosZ9TGzsJZRcuxLNBd4kHKffVf3tjjVWEVbeFEjBgK@aws.connect.psdb.cloud/animalia', {
   dialectOptions: {
     ssl: {
       rejectUnauthorized: true
@@ -29,6 +29,16 @@ const propietarios = sequelize.define(
         Apellido: {
             type: DataTypes.STRING,
             allowNull: false,
+        },
+        
+        createdAt: {
+          type: DataTypes.DATE,
+          allowNull: true
+        },
+
+        updatedAt: {
+          type: DataTypes.DATE,
+          allowNull: true
         }
     }
 )
