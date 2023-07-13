@@ -1,6 +1,8 @@
 const {Sequelize, DataTypes} = require('sequelize')
 const pg = require('pg');
 
+
+
 // Establece el objeto SSL con la opción 'rejectUnauthorized' adecuada
 pg.defaults.ssl = {
   rejectUnauthorized: true
@@ -28,22 +30,89 @@ const propietarios = sequelize.define(
         },
         Apellido: {
             type: DataTypes.STRING,
-            allowNull: false,
+            allowNull: true,
         },
         
-        createdAt: {
-          type: DataTypes.DATE,
-          allowNull: true
+        Activo: {
+          type: DataTypes.BOOLEAN,
+          allowNull: false,
+          defaultValue: true
         },
 
-        updatedAt: {
-          type: DataTypes.DATE,
-          allowNull: true
+        Email: {
+          type: DataTypes.STRING,
+          allowNull:true
+        },
+        
+        Telefono: {
+          type: DataTypes.STRING,
+          allowNull: true,
         }
+
+    },
+    {
+      sequelize,
+      timestamps: true
     }
 )
 
+
+const animales = sequelize.define(
+  'Animales',
+  {
+  id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    allowNull: false
+  },
+  Nombre: {
+    type: DataTypes.STRING,
+    allowNull: false
+  },
+
+  Peso: {
+    type: DataTypes.DECIMAL(4, 1),
+    allowNull: true
+  },
+  Especie: {
+    type: DataTypes.STRING(10),
+    allowNull: true
+  },
+  Esterilizado: {
+    type: DataTypes.BOOLEAN,
+    allowNull: true
+  },
+  FechaNacimiento: {
+    type: DataTypes.DATEONLY,
+    allowNull: true
+  },
+  Foto: {
+    type: DataTypes.BLOB('long'),
+    allowNull: true
+  },
+  Activo: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+    defaultValue: 1
+  },
+  Sexo: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  }
+},
+  {hooks: {
+    beforeValidate: function (animales, options) {
+    if (typeof animales.Nombre === "string") {
+        animales.Nombre = animales.Nombre.toUpperCase().trim();
+          }
+        },
+    },
+  timestamps: false,
+});
+
+
 module.exports = {
     sequelize,
-    propietarios
+    propietarios,
+    animales
 }

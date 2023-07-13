@@ -1,24 +1,39 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../database/sequelize-model')
-const { Op, ValidationError, fn , col} = require("sequelize");
+const { Op, ValidationError} = require("sequelize");
 
-router.get('/api/propietarios', async function (req, res) {
-    let data = await db.propietarios.findAll(
+
+router.get('/api/animales', async function (req, res) {
+    let data = await db.animales.findAll(
         {
-            attributes: ["id", "Nombre", "Apellido", "Activo", "Email", "Telefono"] /// formatear fechas
+            attributes: ["id", 
+            "Nombre", 
+            "Peso",
+            "Especie",
+            "Esterilizado",
+            "FechaNacimiento",
+            "Foto",
+            "Activo",
+            "Sexo"
+        ]
         }
     )
     res.json(data)
 })
 
-router.get("/api/propietarios/:id", async function (req, res) {
-  let items = await db.propietarios.findOne({
+router.get("/api/animales/:id", async function (req, res) {
+  let items = await db.animales.findOne({
     attributes: [
-      "id",
-      "Nombre",
-      "Apellido",
-      "Activo"
+        "id", 
+        "Nombre", 
+        "Peso",
+        "Especie",
+        "Esterilizado",
+        "FechaNacimiento",
+        "Foto",
+        "Activo",
+        "Sexo"
     ],
     where: { id: req.params.id },
   });
@@ -26,13 +41,17 @@ router.get("/api/propietarios/:id", async function (req, res) {
 });
 
 
-router.post('/api/propietarios', async (req, res) => {
+router.post('/api/animales', async (req, res) => {
     try {
-        let data = await db.propietarios.create({
-          Nombre: req.body.Nombre,
-          Apellido: req.body.Apellido,
-          Email: req.body.Email,
-          Telefono: req.body.Telefono
+        let data = await db.animales.create({
+            id: req.body.id,
+            Nombre: req.body.Nombre,
+            Peso: req.body.Peso,
+            Especie: req.body.Especie,
+            Esterilizado: req.body.Esterilizado,
+            FechaNacimiento: req.body.FechaNacimiento,
+            Foto: req.body.Foto,
+            Sexo: req.body.Sexo
         });
         res.status(200).json(data.dataValues); // devolvemos el registro agregado!
       } catch (err) {
@@ -48,29 +67,33 @@ router.post('/api/propietarios', async (req, res) => {
       }
 })
 
-router.put('/api/propietarios/:id', async (req, res) => {
+router.put('/api/animales/:id', async (req, res) => {
   try {
-    let item = await db.propietarios.findOne({
+    let item = await db.animales.findOne({
       attributes: [
         "id",
-        "Nombre",
-        "Apellido",
+        "Nombre", 
+        "Peso",
+        "Especie",
+        "Esterilizado",
+        "FechaNacimiento",
+        "Foto",
         "Activo",
-        "Email",
-        "Telefono"
+        "Sexo"
       ],
       where: { id: req.params.id },
     });
     if (!item) {
-      res.status(404).json({ message: "propietario no encontrado" });
+      res.status(404).json({ message: "Animal no encontrado" });
       return;
     }
-    item.id = req.body.id;
-    item.Nombre = req.body.Nombre;
-    item.Apellido = req.body.Apellido;
-    item.Activo= req.body.Activo;
-    item.Email= req.body.Email,
-    item.Telefono = req.body.Telefono
+    item.id = req.body.id
+    item.Nombre = req.body.Nombre,
+    item.Peso =  req.body.Peso,
+    item.Especie =  req.body.Especie,
+    item.Esterilizado = req.body.Esterilizado,
+    item.FechaNacimiento =  req.body.FechaNacimiento,
+    item.Foto =  req.body.Foto
     await item.save();
     res.sendStatus(200);
   } catch (err) {
@@ -87,12 +110,12 @@ router.put('/api/propietarios/:id', async (req, res) => {
 })
 
 
-router.delete("/api/propietarios/:id", async (req, res) => {
+router.delete("/api/animales/:id", async (req, res) => {
   let bajaFisica = false;
 
   if (bajaFisica) {
     // baja fisica
-    let filasBorradas = await db.propietarios.destroy({
+    let filasBorradas = await db.animales.destroy({
       where: { id: req.params.id },
     });
     if (filasBorradas == 1) res.sendStatus(200);
@@ -101,7 +124,7 @@ router.delete("/api/propietarios/:id", async (req, res) => {
     // baja logica
     try {
       let data = await db.sequelize.query(
-        "UPDATE Propietarios SET Activo = case when Activo = 1 then 0 else 1 end WHERE id = :id",
+        "UPDATE Animales SET Activo = case when Activo = 1 then 0 else 1 end WHERE id = :id",
         {
           replacements: { id: +req.params.id },
         }
@@ -123,4 +146,3 @@ router.delete("/api/propietarios/:id", async (req, res) => {
 
 
 module.exports = router;
-
