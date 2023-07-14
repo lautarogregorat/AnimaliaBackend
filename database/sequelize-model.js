@@ -1,14 +1,14 @@
 const {Sequelize, DataTypes} = require('sequelize')
 const pg = require('pg');
 
-
+require('dotenv').config()
 
 // Establece el objeto SSL con la opción 'rejectUnauthorized' adecuada
 pg.defaults.ssl = {
   rejectUnauthorized: true
 };
 //borrar ***
-const sequelize = new Sequelize('***mysql://b0nc5l0h7hsyx528khhc:pscale_pw_Qsk91o3AzK067oUYJ9piBJB2b5UBPz4Z9Y8Kb4RXiQ1@aws.connect.psdb.cloud/animalia', {
+const sequelize = new Sequelize(process.env.DATABASE_SEQUELIZE, {
   dialectOptions: {
     ssl: {
       rejectUnauthorized: true
