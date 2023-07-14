@@ -107,16 +107,6 @@ router.put('/api/animales/:id', async (req, res) => {
       res.status(404).json({ message: "Animal no encontrado" });
       return;
     }
-    item.id = req.body.id
-    item.Nombre = req.body.Nombre,
-    item.Peso =  req.body.Peso,
-    item.Especie =  req.body.Especie,
-    item.Esterilizado = req.body.Esterilizado,
-    item.FechaNacimiento =  req.body.FechaNacimiento,
-    item.Foto =  req.body.Foto,
-    item.Sexo = req.body.Sexo,
-    item.Propietarios_id = req.body.Propietarios_id
- 
     res.sendStatus(200);
   } catch (err) {
     if (err instanceof ValidationError) {
