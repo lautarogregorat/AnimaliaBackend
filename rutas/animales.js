@@ -86,21 +86,23 @@ router.post('/api/animales', async (req, res) => {
 
 router.put('/api/animales/:id', async (req, res) => {
   try {
-    let item = await db.animales.findOne({
-      attributes: [
-        "id",
-        "Nombre", 
-        "Peso",
-        "Especie",
-        "Esterilizado",
-        "FechaNacimiento",
-        "Foto",
-        "Activo",
-        "Sexo",
-        "Propietarios_id"
-      ],
-      where: { id: req.params.id },
-    });
+    let item = await db.animales.update(
+      {
+        id: req.body.id,
+        Nombre : req.body.Nombre,
+        Peso : req.body.Peso,
+        Especie :  req.body.Especie,
+        Esterilizado : req.body.Esterilizado,
+        iFechaNacimiento :  req.body.FechaNacimiento,
+        Foto : req.body.Foto,
+        Sexo : req.body.Sexo,
+        Propietarios_id : req.body.Propietarios_id
+      },
+
+      {
+        where: {id: req.params.id}
+      }
+    );
     if (!item) {
       res.status(404).json({ message: "Animal no encontrado" });
       return;
@@ -114,7 +116,7 @@ router.put('/api/animales/:id', async (req, res) => {
     item.Foto =  req.body.Foto,
     item.Sexo = req.body.Sexo,
     item.Propietarios_id = req.body.Propietarios_id
-    await item.save();
+ 
     res.sendStatus(200);
   } catch (err) {
     if (err instanceof ValidationError) {
