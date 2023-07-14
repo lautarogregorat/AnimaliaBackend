@@ -1,6 +1,8 @@
 const express = require('express');
-const connectDB = require('./database/connect')
-connectDB()
+require('dotenv').config()
+const mysql = require('mysql2')
+const connection = mysql.createConnection(process.env.DATABASE_URL)
+
 const app = express()
 app.use(express.json())
 

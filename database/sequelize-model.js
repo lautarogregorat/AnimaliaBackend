@@ -7,8 +7,8 @@ const pg = require('pg');
 pg.defaults.ssl = {
   rejectUnauthorized: true
 };
-
-const sequelize = new Sequelize('mysql://dw9ekho67powef39vf3x:pscale_pw_WosZ9TGzsJZRcuxLNBd4kHKffVf3tjjVWEVbeFEjBgK@aws.connect.psdb.cloud/animalia', {
+//borrar ***
+const sequelize = new Sequelize('***mysql://b0nc5l0h7hsyx528khhc:pscale_pw_Qsk91o3AzK067oUYJ9piBJB2b5UBPz4Z9Y8Kb4RXiQ1@aws.connect.psdb.cloud/animalia', {
   dialectOptions: {
     ssl: {
       rejectUnauthorized: true
@@ -49,10 +49,12 @@ const propietarios = sequelize.define(
           allowNull: true,
         }
 
+
+
     },
     {
       sequelize,
-      timestamps: true
+      timestamps: false
     }
 )
 
@@ -98,7 +100,13 @@ const animales = sequelize.define(
   Sexo: {
     type: DataTypes.STRING,
     allowNull: true,
+  },
+
+  Propietarios_id: {
+    type: DataTypes.INTEGER,
+    allowNull: true
   }
+
 },
   {hooks: {
     beforeValidate: function (animales, options) {
@@ -108,8 +116,11 @@ const animales = sequelize.define(
         },
     },
   timestamps: false,
+  sequelize
 });
 
+propietarios.hasMany(animales);
+animales.belongsTo(propietarios);
 
 module.exports = {
     sequelize,

@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const db = require('../database/sequelize-model')
-const { Op, ValidationError} = require("sequelize");
+const { Op, ValidationError, Sequelize} = require("sequelize");
 
 
 router.get('/api/animales', async function (req, res) {
@@ -15,7 +15,8 @@ router.get('/api/animales', async function (req, res) {
             "FechaNacimiento",
             "Foto",
             "Activo",
-            "Sexo"
+            "Sexo",
+            "Propietarios_id"
         ]
         }
     )
@@ -33,12 +34,27 @@ router.get("/api/animales/:id", async function (req, res) {
         "FechaNacimiento",
         "Foto",
         "Activo",
-        "Sexo"
+        "Sexo",
+        "Propietarios_id"
     ],
     where: { id: req.params.id },
   });
   res.status(200).json(items);
 });
+
+router.get("/api/animalysupropietario/:id", async function (req, res) {
+  const id = req.params.id
+  let item = await db.sequelize.query(
+    `SELECT A.Nombre AS AnimalNombre, A.id AS AnimalID, P.Nombre AS PropietarioNombre, P.id AS PropietarioID 
+    FROM Animales A JOIN Propietarios P ON A.Propietarios_id = P.id WHERE A.id = :id`, // : es un marcador de posicion
+    {
+      replacements: { id: id },
+      type: db.sequelize.QueryTypes.SELECT
+    }
+  );
+  res.status(200).json(item)
+});
+
 
 
 router.post('/api/animales', async (req, res) => {
@@ -51,7 +67,8 @@ router.post('/api/animales', async (req, res) => {
             Esterilizado: req.body.Esterilizado,
             FechaNacimiento: req.body.FechaNacimiento,
             Foto: req.body.Foto,
-            Sexo: req.body.Sexo
+            Sexo: req.body.Sexo,
+            Propietarios_id: req.body.Propietarios_id
         });
         res.status(200).json(data.dataValues); // devolvemos el registro agregado!
       } catch (err) {
@@ -79,7 +96,8 @@ router.put('/api/animales/:id', async (req, res) => {
         "FechaNacimiento",
         "Foto",
         "Activo",
-        "Sexo"
+        "Sexo",
+        "Propietarios_id"
       ],
       where: { id: req.params.id },
     });
@@ -93,7 +111,9 @@ router.put('/api/animales/:id', async (req, res) => {
     item.Especie =  req.body.Especie,
     item.Esterilizado = req.body.Esterilizado,
     item.FechaNacimiento =  req.body.FechaNacimiento,
-    item.Foto =  req.body.Foto
+    item.Foto =  req.body.Foto,
+    item.Sexo = req.body.Sexo,
+    item.Propietarios_id = req.body.Propietarios_id
     await item.save();
     res.sendStatus(200);
   } catch (err) {
