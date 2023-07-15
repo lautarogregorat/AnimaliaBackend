@@ -1,64 +1,51 @@
 const express = require("express");
 const router = express.Router();
-const db = require('../database/sequelize-model')
-const { Op, ValidationError, fn , col} = require("sequelize");
+const db = require("../database/sequelize-model");
+const { Op, ValidationError, fn, col } = require("sequelize");
 
-router.get('/api/propietarios', async function (req, res) {
-    let data = await db.propietarios.findAll(
-        {
-            attributes: ["id", "Nombre", "Apellido", "Activo", "Email", "Telefono"] /// formatear fechas
-        }
-    )
-    res.json(data)
-})
+router.get("/api/propietarios", async function (req, res) {
+  let data = await db.propietarios.findAll({
+    attributes: ["id", "Nombre", "Apellido", "Activo", "Email", "Telefono"], /// formatear fechas
+  });
+  res.json(data);
+});
 
 router.get("/api/propietarios/:id", async function (req, res) {
   let items = await db.propietarios.findOne({
-    attributes: [
-      "id",
-      "Nombre",
-      "Apellido",
-      "Activo"
-    ],
+    attributes: ["id", "Nombre", "Apellido", "Activo"],
     where: { id: req.params.id },
   });
   res.status(200).json(items);
 });
 
+router.post("/api/propietarios", async (req, res) => {
+  try {
+    let data = await db.propietarios.create({
+      Nombre: req.body.Nombre,
+      Apellido: req.body.Apellido,
+      Email: req.body.Email,
+      Telefono: req.body.Telefono,
+    });
+    res.status(200).json(data.dataValues); // devolvemos el registro agregado!
+  } catch (err) {
+    if (err instanceof ValidationError) {
+      // si son errores de validacion, los devolvemos
+      let messages = "";
+      err.errors.forEach(
+        (x) => (messages += (x.path ?? "campo") + ": " + x.message + "\n")
+      );
+      res.status(400).json({ message: messages });
+    } else {
+      // si son errores desconocidos, los dejamos que los controle el middleware de errores
+      throw err;
+    }
+  }
+});
 
-router.post('/api/propietarios', async (req, res) => {
-    try {
-        let data = await db.propietarios.create({
-          Nombre: req.body.Nombre,
-          Apellido: req.body.Apellido,
-          Email: req.body.Email,
-          Telefono: req.body.Telefono
-        });
-        res.status(200).json(data.dataValues); // devolvemos el registro agregado!
-      } catch (err) {
-        if (err instanceof ValidationError) {
-          // si son errores de validacion, los devolvemos
-          let messages = '';
-          err.errors.forEach((x) => messages += (x.path ?? 'campo') + ": " + x.message + '\n');
-          res.status(400).json({message : messages});
-        } else {
-          // si son errores desconocidos, los dejamos que los controle el middleware de errores
-          throw err;
-        }
-      }
-})
-
-router.put('/api/propietarios/:id', async (req, res) => {
+router.put("/api/propietarios/:id", async (req, res) => {
   try {
     let item = await db.propietarios.findOne({
-      attributes: [
-        "id",
-        "Nombre",
-        "Apellido",
-        "Activo",
-        "Email",
-        "Telefono"
-      ],
+      attributes: ["id", "Nombre", "Apellido", "Activo", "Email", "Telefono"],
       where: { id: req.params.id },
     });
     if (!item) {
@@ -68,24 +55,22 @@ router.put('/api/propietarios/:id', async (req, res) => {
     item.id = req.body.id;
     item.Nombre = req.body.Nombre;
     item.Apellido = req.body.Apellido;
-    item.Activo= req.body.Activo;
-    item.Email= req.body.Email,
-    item.Telefono = req.body.Telefono
+    item.Activo = req.body.Activo;
+    (item.Email = req.body.Email), (item.Telefono = req.body.Telefono);
     await item.save();
     res.sendStatus(200);
   } catch (err) {
     if (err instanceof ValidationError) {
       // si son errores de validacion, los devolvemos
-      let messages = '';
-      err.errors.forEach((x) => messages += x.path + ": " + x.message + '\n');
-      res.status(400).json({message : messages});
+      let messages = "";
+      err.errors.forEach((x) => (messages += x.path + ": " + x.message + "\n"));
+      res.status(400).json({ message: messages });
     } else {
       // si son errores desconocidos, los dejamos que los controle el middleware de errores
       throw err;
     }
   }
-})
-
+});
 
 router.delete("/api/propietarios/:id", async (req, res) => {
   let bajaFisica = false;
@@ -120,7 +105,4 @@ router.delete("/api/propietarios/:id", async (req, res) => {
   }
 });
 
-
-
 module.exports = router;
-

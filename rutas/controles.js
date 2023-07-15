@@ -1,69 +1,60 @@
 const express = require("express");
-const router = express.Router();
 const db = require("../database/sequelize-model");
-const { Op, ValidationError, Sequelize } = require("sequelize");
+const router = express.Router();
+const { Op, ValidationError, fn, col } = require("sequelize");
 
-router.get("/api/animales", async function (req, res) {
-  let data = await db.animales.findAll({
+router.get("/api/controles", async function (req, res) {
+  let data = await db.controles.findAll({
     attributes: [
       "id",
-      "Nombre",
-      "Peso",
-      "Especie",
-      "Esterilizado",
-      "FechaNacimiento",
+      "Examen",
+      "FechaExamen",
+      "Tratamiento",
+      "FechaTratamiento",
       "Foto",
+      "MotivoConsulta",
+      "Anamnesis",
+      "Resenia",
+      "Animales_id",
       "Activo",
-      "Sexo",
-      "Propietarios_id",
     ],
   });
   res.json(data);
 });
 
-router.get("/api/animales/:id", async function (req, res) {
-  let items = await db.animales.findOne({
+router.get("/api/controles/:id", async function (req, res) {
+  let data = await db.controles.findAll({
     attributes: [
       "id",
-      "Nombre",
-      "Peso",
-      "Especie",
-      "Esterilizado",
-      "FechaNacimiento",
+      "Examen",
+      "FechaExamen",
+      "Tratamiento",
+      "FechaTratamiento",
       "Foto",
+      "MotivoConsulta",
+      "Anamnesis",
+      "Resenia",
+      "Animales_id",
       "Activo",
-      "Sexo",
-      "Propietarios_id",
     ],
     where: { id: req.params.id },
   });
-  res.status(200).json(items);
+  res.status(200).json(data);
 });
 
-router.get("/api/animalysupropietario/:id", async function (req, res) {
-  const id = req.params.id;
-  let item = await db.sequelize.query(
-    `SELECT A.Nombre AS AnimalNombre, A.id AS AnimalID, P.Nombre AS PropietarioNombre, P.id AS PropietarioID 
-    FROM Animales A JOIN Propietarios P ON A.Propietarios_id = P.id WHERE A.id = :id`, // : es un marcador de posicion
-    {
-      replacements: { id: id },
-      type: db.sequelize.QueryTypes.SELECT,
-    }
-  );
-  res.status(200).json(item);
-});
-
-router.post("/api/animales", async (req, res) => {
+router.post("/api/controles", async function (req, res) {
   try {
-    let data = await db.animales.create({
-      Nombre: req.body.Nombre,
-      Peso: req.body.Peso,
-      Especie: req.body.Especie,
-      Esterilizado: req.body.Esterilizado,
-      FechaNacimiento: req.body.FechaNacimiento,
+    let data = await db.controles.create({
+      Examen: req.body.Examen,
+      FechaExamen: req.body.FechaExamen,
+      Tratamiento: req.body.Tratamiento,
+      FechaTratamiento: req.body.FechaTratamiento,
       Foto: req.body.Foto,
-      Sexo: req.body.Sexo,
-      Propietarios_id: req.body.Propietarios_id,
+      MotivoConsulta: req.body.MotivoConsulta,
+      Anamnesis: req.body.Anamnesis,
+      Resenia: req.body.Resenia,
+      Animales_id: req.body.Animales_id,
+      Activo: req.body.Activo,
     });
     res.status(200).json(data.dataValues); // devolvemos el registro agregado!
   } catch (err) {
@@ -81,19 +72,20 @@ router.post("/api/animales", async (req, res) => {
   }
 });
 
-router.put("/api/animales/:id", async (req, res) => {
+router.put("/api/controles/:id", async (req, res) => {
   try {
-    let item = await db.animales.update(
+    let item = await db.controles.update(
       {
-
-        Nombre: req.body.Nombre,
-        Peso: req.body.Peso,
-        Especie: req.body.Especie,
-        Esterilizado: req.body.Esterilizado,
-        iFechaNacimiento: req.body.FechaNacimiento,
+        Examen: req.body.Examen,
+        FechaExamen: req.body.FechaExamen,
+        Tratamiento: req.body.Tratamiento,
+        FechaTratamiento: req.body.FechaTratamiento,
         Foto: req.body.Foto,
-        Sexo: req.body.Sexo,
-        Propietarios_id: req.body.Propietarios_id,
+        MotivoConsulta: req.body.MotivoConsulta,
+        Anamnesis: req.body.Anamnesis,
+        Resenia: req.body.Resenia,
+        Animales_id: req.body.Animales_id,
+        Activo: req.body.Activo,
       },
 
       {
@@ -101,7 +93,7 @@ router.put("/api/animales/:id", async (req, res) => {
       }
     );
     if (!item) {
-      res.status(404).json({ message: "Animal no encontrado" });
+      res.status(404).json({ message: "Control no encontrado" });
       return;
     }
     res.sendStatus(200);
@@ -118,12 +110,12 @@ router.put("/api/animales/:id", async (req, res) => {
   }
 });
 
-router.delete("/api/animales/:id", async (req, res) => {
+router.delete("/api/controles/:id", async (req, res) => {
   let bajaFisica = false;
 
   if (bajaFisica) {
     // baja fisica
-    let filasBorradas = await db.animales.destroy({
+    let filasBorradas = await db.controles.destroy({
       where: { id: req.params.id },
     });
     if (filasBorradas == 1) res.sendStatus(200);
@@ -132,7 +124,7 @@ router.delete("/api/animales/:id", async (req, res) => {
     // baja logica
     try {
       let data = await db.sequelize.query(
-        "UPDATE Animales SET Activo = case when Activo = 1 then 0 else 1 end WHERE id = :id",
+        "UPDATE Controles SET Activo = case when Activo = 1 then 0 else 1 end WHERE id = :id",
         {
           replacements: { id: +req.params.id },
         }
