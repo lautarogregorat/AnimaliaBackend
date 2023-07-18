@@ -52,9 +52,11 @@ const propietarios = sequelize.define(
   {
     hooks: {
       beforeValidate: function (propietarios, options) {
-        if (typeof propietarios.Nombre === "string" && typeof propietarios.Apellido === "string") {
-          propietarios.Nombre = propietarios.Nombre.toUpperCase().trim();
-          propietarios.Apellido = propietarios.Apellido.toUpperCase().trim();
+        if (typeof propietarios.Nombre === "string") {
+          propietarios.Nombre = propietarios.Nombre.toLowerCase().trim();
+        }
+        if (typeof propietarios.Apellido === "string") {
+          propietarios.Apellido = propietarios.Apellido.toLowerCase().trim();
         }
       },
     },
@@ -116,7 +118,13 @@ const animales = sequelize.define(
     hooks: {
       beforeValidate: function (animales, options) {
         if (typeof animales.Nombre === "string") {
-          animales.Nombre = animales.Nombre.toUpperCase().trim();
+          animales.Nombre = animales.Nombre.toLowerCase().trim();
+        }
+        if (typeof animales.Especie === "string") {
+          animales.Especie = animales.Especie.toLowerCase().trim();
+        }
+        if (typeof animales.Sexo === "string") {
+          animales.Sexo = animales.Sexo.toLowerCase().trim();
         }
       },
     },
@@ -142,7 +150,7 @@ const controles = sequelize.define(
       type: DataTypes.TEXT("long"),
       allowNull: true,
     },
-    
+
     Animales_id: {
       type: DataTypes.INTEGER,
       allowNull: true,
@@ -150,8 +158,8 @@ const controles = sequelize.define(
     Activo: {
       type: DataTypes.BOOLEAN,
       allowNull: true,
-      defaultValue: 1
-    }
+      defaultValue: 1,
+    },
   },
 
   {

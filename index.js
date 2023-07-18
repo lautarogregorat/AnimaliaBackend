@@ -2,6 +2,7 @@ const express = require("express");
 require("dotenv").config();
 const mysql = require("mysql2");
 const connection = mysql.createConnection(process.env.DATABASE_URL);
+const cors = require("cors");
 
 const app = express();
 app.use(express.json());
@@ -15,7 +16,7 @@ app.use(animales);
 const controles = require("./rutas/controles");
 app.use(controles);
 
-const seguridad = require('./rutas/seguridad');
+const seguridad = require("./rutas/seguridad");
 app.use(seguridad);
 
 app.listen(3000, () => {
