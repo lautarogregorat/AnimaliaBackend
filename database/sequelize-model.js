@@ -134,38 +134,15 @@ const controles = sequelize.define(
       autoIncrement: true,
       allowNull: false,
     },
-    FechaExamen: {
+    Fecha: {
       type: DataTypes.DATEONLY,
       allowNull: true,
     },
-    Examen: {
+    Descripcion: {
       type: DataTypes.TEXT("long"),
       allowNull: true,
     },
-    Tratamiento: {
-      type: DataTypes.TEXT("long"),
-      allowNull: true,
-    },
-    FechaTratamiento: {
-      type: DataTypes.DATEONLY,
-      allowNull: true,
-    },
-    Foto: {
-      type: DataTypes.BLOB("long"),
-      allowNull: true,
-    },
-    MotivoConsulta: {
-      type: DataTypes.TEXT("long"),
-      allowNull: true,
-    },
-    Anamnesis: {
-      type: DataTypes.TEXT("long"),
-      allowNull: true,
-    },
-    Resenia: {
-      type: DataTypes.TEXT("long"),
-      allowNull: true,
-    },
+    
     Animales_id: {
       type: DataTypes.INTEGER,
       allowNull: true,

@@ -15,6 +15,9 @@ app.use(animales);
 const controles = require("./rutas/controles");
 app.use(controles);
 
+const seguridad = require('./rutas/seguridad');
+app.use(seguridad);
+
 app.listen(3000, () => {
   console.log("hola mundo");
 });
