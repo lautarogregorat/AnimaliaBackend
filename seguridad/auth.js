@@ -1,6 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 const accessTokenSecret = "youraccesstokensecret";
+const refreshTokenSecret = "yourrefreshtokensecrethere";
 
 const authenticateJWT = (req, res, next) => {
   const authHeader = req.headers.authorization;
@@ -23,4 +24,4 @@ const authenticateJWT = (req, res, next) => {
 };
 
 
-module.exports = { authenticateJWT, accessTokenSecret, };
+module.exports = { authenticateJWT, accessTokenSecret, refreshTokenSecret};
