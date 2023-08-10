@@ -1,5 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const pg = require("pg");
+const { DataTypes } = require("sequelize");
+const { DataTypes } = require("sequelize");
 
 require("dotenv").config();
 
@@ -168,10 +170,41 @@ const controles = sequelize.define(
   }
 );
 
+const detallesControl = sequelize.define(
+  "detallesControl", {
+    id: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+      allowNull: false
+    },
+    Descripcion: {
+      type: DataTypes.TEXT
+    },
+    Imagen: {
+      type: DataTypes.BLOB,
+    },
+    Controles_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false
+    },
+    Tipo: {
+      type: DataTypes.VARCHAR(30)
+    }
+  },
+  {
+    sequelize,
+    timestamps: false
+  }
+);
+
 propietarios.hasMany(animales);
 animales.belongsTo(propietarios);
 animales.hasMany(controles);
 controles.belongsTo(animales);
+detallesControl.belongsTo(controles);
+controles.hasMany(detallesControl);
+
 
 module.exports = {
   sequelize,
