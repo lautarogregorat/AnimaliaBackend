@@ -12,10 +12,29 @@ router.get(
     if (usuario !== "admin") {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
-    let data = await db.propietarios.findAll({
-      attributes: ["id", "Nombre", "Apellido", "Activo", "Email", "Telefono"], /// formatear fechas
+    let where = {};
+    if (req.query.Nombre != undefined && req.query.Nombre !== "") {
+      where.Nombre = {
+        [Op.like]: "%" + req.query.Nombre + "%",
+      };
+    }
+    if (req.query.Activo != undefined && req.query.Activo !== "") {
+      // true o false en el modelo, en base de datos es 1 o 0
+      // convierto el string a booleano
+      where.Activo = req.query.Activo === "true";
+    }
+    const Pagina = req.query.Pagina ?? 1;
+    const TamañoPagina = 10;
+    const { count, rows} = await db.propietarios.findAndCountAll({
+      attributes: [
+        "id", "Nombre", "Apellido", "Activo", "Email", "Telefono"
+      ],
+      order: [["Nombre", "ASC"]],
+      where,
+      offset: (Pagina - 1) * TamañoPagina,
+      limit: TamañoPagina,
     });
-    res.json(data);
+    res.json({ Items: rows, RegistrosTotal: count});
   }
 );
 

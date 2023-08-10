@@ -13,7 +13,16 @@ router.get(
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
 
-    let data = await db.animales.findAll({
+    let where = {};
+    if (req.query.Nombre != undefined && req.query.Nombre !== "") {
+      where.Nombre = {
+        [Op.like]: "%" + req.query.Nombre + "%",
+      };
+    }
+
+    const Pagina = req.query.Pagina ?? 1;
+    const TamañoPagina = 10;
+    const { count, rows} = await db.animales.findAndCountAll({
       attributes: [
         "id",
         "Nombre",
@@ -26,8 +35,13 @@ router.get(
         "Sexo",
         "Propietarios_id",
       ],
+      order: [["Nombre", "ASC"]],
+      where,
+      offset: (Pagina - 1) * TamañoPagina,
+      limit: TamañoPagina,
     });
-    res.json(data);
+    res.json({ Items: rows, RegistrosTotal: count});
+
   }
 );
 
