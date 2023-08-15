@@ -1,7 +1,7 @@
 const { Sequelize, DataTypes } = require("sequelize");
 const pg = require("pg");
-const { DataTypes } = require("sequelize");
-const { DataTypes } = require("sequelize");
+
+
 
 require("dotenv").config();
 
@@ -80,7 +80,6 @@ const animales = sequelize.define(
       type: DataTypes.STRING,
       allowNull: false,
     },
-
     Peso: {
       type: DataTypes.DECIMAL(4, 1),
       allowNull: true,
@@ -189,7 +188,7 @@ const detallesControl = sequelize.define(
       allowNull: false
     },
     Tipo: {
-      type: DataTypes.VARCHAR(30)
+      type: DataTypes.STRING
     }
   },
   {
@@ -211,4 +210,5 @@ module.exports = {
   propietarios,
   animales,
   controles,
+  detallesControl,
 };
