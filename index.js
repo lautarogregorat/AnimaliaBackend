@@ -25,6 +25,10 @@ app.use(controles);
 const seguridad = require("./rutas/seguridad");
 app.use(seguridad);
 
+const detallesControl = require("./rutas/detallecontroles");
+app.use(detallesControl);
+
+
 app.listen(4000, () => {
   console.log("hola mundo");
 });

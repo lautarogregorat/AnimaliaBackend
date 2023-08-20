@@ -170,7 +170,7 @@ const controles = sequelize.define(
 );
 
 const detallesControl = sequelize.define(
-  "detallesControl", {
+  "DetalleControles", {
     id: {
       type: DataTypes.INTEGER,
       primaryKey: true,
@@ -188,7 +188,16 @@ const detallesControl = sequelize.define(
       allowNull: false
     },
     Tipo: {
-      type: DataTypes.STRING
+      type: DataTypes.STRING,
+      allowNull: true,
+    },
+    Fecha:{
+      type: DataTypes.DATEONLY,
+      allowNull: true
+    },
+    Activo: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: 1
     }
   },
   {
