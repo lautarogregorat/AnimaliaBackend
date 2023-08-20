@@ -34,7 +34,7 @@ router.post("/api/token", (req, res) => {
     const accessToken = jwt.sign(
       { usuario: user.usuario, rol: user.rol },
       auth.accessTokenSecret,
-      { expiresIn: "20m" }
+      { expiresIn: "500m" }
     );
 
     res.json({
@@ -60,7 +60,7 @@ router.post("/api/login", (req, res) => {
     const accessToken = jwt.sign(
       { usuario: user.usuario, rol: user.rol },
       auth.accessTokenSecret,
-      { expiresIn: "20m" }
+      { expiresIn: "500m" }
     );
     const refreshToken = jwt.sign(
       { usuario: user.usuario, rol: user.rol },
