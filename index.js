@@ -28,6 +28,7 @@ app.use(seguridad);
 const detallesControl = require("./rutas/detallecontroles");
 app.use(detallesControl);
 
-
-app.listen(process.env.PORT, () => {
+const port =  process.env.PORT
+app.listen(port, () => {
+    console.log('Api en funcionamiento')
 });
