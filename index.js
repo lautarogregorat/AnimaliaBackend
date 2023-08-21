@@ -29,6 +29,5 @@ const detallesControl = require("./rutas/detallecontroles");
 app.use(detallesControl);
 
 
-app.listen(4000, () => {
-  console.log("hola mundo");
+app.listen(process.env.PORT, () => {
 });

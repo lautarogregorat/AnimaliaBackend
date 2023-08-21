@@ -5,8 +5,8 @@ const auth = require("../seguridad/auth");
 
 const users = [
   {
-    usuario: "admin",
-    clave: "123",
+    usuario: process.env.USUARIO,
+    clave: process.env.PSWRD,
     rol: "admin",
   },
 
