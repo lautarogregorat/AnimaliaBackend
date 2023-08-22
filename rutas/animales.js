@@ -9,7 +9,7 @@ router.get(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
 
@@ -50,7 +50,7 @@ router.get(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
 
@@ -88,7 +88,7 @@ router.get("/api/animalysupropietario/:id", async function (req, res) {
 
 router.post("/api/animales", auth.authenticateJWT, async (req, res, next) => {
   const { usuario } = res.locals.user;
-  if (usuario !== "admin") {
+  if (usuario !== process.env.USUARIO) {
     return res.status(403).json({ message: "usuario no autorizado!" });
   }
   try {
@@ -123,7 +123,7 @@ router.put(
   auth.authenticateJWT,
   async (req, res, next) => {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     try {
@@ -170,7 +170,7 @@ router.delete(
   async (req, res, next) => {
     let bajaFisica = false;
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     if (bajaFisica) {

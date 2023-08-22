@@ -9,7 +9,7 @@ router.get(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     let where = {};
@@ -43,7 +43,7 @@ router.get(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     let items = await db.propietarios.findOne({
@@ -59,7 +59,7 @@ router.post(
   auth.authenticateJWT,
   async (req, res, next) => {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     try {
@@ -90,6 +90,10 @@ router.put(
   "/api/propietarios/:id",
   auth.authenticateJWT,
   async (req, res, next) => {
+    const { usuario } = res.locals.user;
+    if (usuario !== process.env.USUARIO) {
+      return res.status(403).json({ message: "usuario no autorizado!" });
+    }
     try {
       let item = await db.propietarios.findOne({
         attributes: ["id", "Nombre", "Apellido", "Activo", "Email", "Telefono"],
@@ -128,7 +132,7 @@ router.delete(
   async (req, res, next) => {
     let bajaFisica = false;
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     if (bajaFisica) {

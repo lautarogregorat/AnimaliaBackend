@@ -9,7 +9,7 @@ router.get(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     let data = await db.detallesControl.findAll({
@@ -24,7 +24,7 @@ router.get(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     let data = await db.detallesControl.findAll({
@@ -40,7 +40,7 @@ router.post(
   auth.authenticateJWT,
   async function (req, res, next) {
     const { usuario } = res.locals.user;
-    if (usuario !== "admin") {
+    if (usuario !== process.env.USUARIO) {
       return res.status(403).json({ message: "usuario no autorizado!" });
     }
     try {
@@ -73,6 +73,10 @@ router.put(
   "/api/detallecontroles/:id",
   auth.authenticateJWT,
   async (req, res, next) => {
+    const { usuario } = res.locals.user;
+    if (usuario !== process.env.USUARIO) {
+      return res.status(403).json({ message: "usuario no autorizado!" });
+    }
     try {
       let item = await db.detallesControl.update(
         {
@@ -114,7 +118,10 @@ router.delete(
   auth.authenticateJWT,
   async (req, res, next) => {
     let bajaFisica = false;
-
+    const { usuario } = res.locals.user;
+    if (usuario !== process.env.USUARIO) {
+      return res.status(403).json({ message: "usuario no autorizado!" });
+    }
     if (bajaFisica) {
       // baja fisica
       let filasBorradas = await db.detallesControl.destroy({
